@@ -1,0 +1,54 @@
+<template>
+	<div class="RecipeView">
+    {{id}}
+		<h1>{{ recipe.name }}</h1>
+		  <hr>
+		<h2>{{ recipe.short_comemnt }}</h2>
+		  <hr>
+		<ul>
+			<li v-for="ingredient in recipe.ingredients"> <b>{{ ingredient.name }}</b>: {{ ingredient.count }} </li>
+		</ul>
+    <br>
+    <p>{{ recipe.annotation }}</p>
+
+    <p>{{ recipe.steps }}</p>
+
+	</div>
+</template>
+
+<script>
+import PostsService from '@/services/PostsService'
+export default {
+  props: ['id'],
+  name: 'RecipeView',
+  data () {
+    return {
+      recipe: { }
+    }
+  },
+  created () {
+  },
+  mounted () {
+  },
+  watch: {
+    id: function (val) {
+      this.GetRecipe(val)
+    }
+  },
+  methods: {
+    async GetRecipe (id) {
+      const response = await PostsService.fetchPosts(id)
+      this.recipe = response.data
+    }
+  }
+}
+</script>
+
+<style>
+  h1 {
+    font-size: 60px;
+  }
+  h2 {
+    font-size: 30px;
+  }
+</style>
