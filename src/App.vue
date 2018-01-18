@@ -35,7 +35,10 @@
       >
         <v-icon>remove</v-icon>
       </v-btn>
-      <a href="#"><v-toolbar-title v-text="title"></v-toolbar-title></a>
+      <router-link :to="{ name: 'StartPage' }">
+        <v-toolbar-title v-text="title">
+        </v-toolbar-title>
+      </router-link>
       <v-spacer></v-spacer>
       <v-btn
         icon
@@ -97,7 +100,7 @@
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Vuetify.js'
+        title: 'Книга рецептов :)'
       }
     }
   }

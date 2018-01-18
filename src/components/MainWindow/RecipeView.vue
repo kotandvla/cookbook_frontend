@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import PostsService from '@/services/PostsService'
 export default {
   props: ['id'],
   name: 'RecipeView',
@@ -32,14 +31,10 @@ export default {
   },
   watch: {
     id: function (val) {
-      this.GetRecipe(val)
+      // this.GetRecipe(val)
     }
   },
   methods: {
-    async GetRecipe (id) {
-      const response = await PostsService.fetchPosts(id)
-      this.recipe = response.data
-    }
   }
 }
 </script>

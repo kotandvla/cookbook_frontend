@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import StartPage from '@/components/MainWindow/StartPage'
 import RecipeView from '@/components/MainWindow/RecipeView'
-import CategoryView from '@/components/MainWindow/CategoryView'
+import ShortCategoryPreview from '@/components/MainWindow/ShortCategoryPreview'
 
 Vue.use(Router)
 
@@ -22,8 +22,8 @@ export default new Router({
     },
     {
       path: '/category/:name',
-      name: 'CategoryView',
-      component: CategoryView,
+      name: 'ShortCategoryPreview',
+      component: ShortCategoryPreview,
       props: true
     }
   ]

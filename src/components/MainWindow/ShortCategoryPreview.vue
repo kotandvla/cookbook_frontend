@@ -1,5 +1,5 @@
 <template>
-	<div class="CategoryView">
+	<div class="ShortCategoryPreview">
     {{ name }}
     <div v-for="recipe in recipes">
       <h2>{{ recipe.name }} ({{ recipe.time }})</h2>
@@ -15,7 +15,7 @@
 <script>
 export default {
   props: ['name'],
-  name: 'CategoryView',
+  name: 'ShortCategoryPreview',
   data () {
     return {
       recipes: [

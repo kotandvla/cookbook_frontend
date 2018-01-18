@@ -21,38 +21,42 @@
           <v-card-text>
             <table width=100% class="table">
               <thead>
-                <td>ID</td>
                 <td>Наименование</td>
                 <td>Англ. название категории</td>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in Categories" >
-                  <td>{{ item.ID }}</td>
+                <tr 
+                  v-for="(item, index) in Categories"
+                  :key="index" 
+                  :title="item.title"
+                >
                   <td>
                     <v-text-field
                       name="input-2-3"
-                      label="Новая категория"
+                      label="Название категории"
                       class="input-group--focused"
                       single-line
                       v-model="item.title"
                     ></v-text-field>
                   </td>
-                  <v-text-field
-                      name="input-2-3"
-                      label="Англ. название категории"
-                      class="input-group--focused"
-                      single-line
-                      v-model="item.link"
+                  <td>
+                    <v-text-field
+                        name="input-2-3"
+                        label="Англ. название категории"
+                        class="input-group--focused"
+                        single-line
+                        v-model="item.link"
                     ></v-text-field>
                   </td>
-                  <td ><a href="#" @click="del_item(index)">del</a></td>
+                  <td >
+                    <button @click="RemoveItem(index)">X</button>
+                  </td>
                 </tr>
                 <tr @keyup.enter="add_item">
-                  <td></td>
                   <td>
                     <v-text-field
                       name="input-2-3"
-                      label="Англ. название категории"
+                      label="Новая категория"
                       class="input-group--focused"
                       single-line
                       v-model.trim="NewCagetoryName"
@@ -68,7 +72,9 @@
                       v-model.trim="NewCategoryEngName"
                     ></v-text-field>
                   </td>
-                  <td ><a href="#" @click="add_item">add</a></td>
+                  <td>                    
+                    <button @click="AddItem">+</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -87,6 +93,8 @@
 <script>
 import TranslitRu from 'translit-russian'
 import Translit from 'translit'
+import CategoryServices from '@/services/CategoryServices'
+
 var trans = Translit(TranslitRu)
 
 export default {
@@ -94,6 +102,7 @@ export default {
   name: 'CategoryEdit',
   data () {
     return {
+      ErrorInInput: false,
       DialogVisible: false,
       NewCagetoryName: '',
       NewCategoryEngName: '',
@@ -104,12 +113,13 @@ export default {
     this.Categories = JSON.parse(JSON.stringify(this.inputCategories))
   },
   watch: {
+    Categories (val) { },
     NewCagetoryName (val) {
       this.NewCategoryEngName = trans(this.NewCagetoryName)
     }
   },
   methods: {
-    add_item: function () {
+    AddItem: function () {
       this.Categories.push({
         title: this.NewCagetoryName,
         icon: 'keyboard_arrow_up',
@@ -119,15 +129,35 @@ export default {
       })
       this.NewCagetoryName = ''
     },
-    del_item: function (value) {
+    RemoveItem: function (value) {
       this.Categories.splice(value, 1)
     },
     DisableChanges: function () {
       this.DialogVisible = false
     },
     SaveChanges: function () {
-      this.$emit('update:inputCategories', JSON.parse(JSON.stringify(this.Categories)))
-      this.DialogVisible = false
+      if (!this.ErrorInInput) {
+        this.SetCategory(this.Categories).then(result => {
+          console.log(result)
+          if (result.status === 'OK') {
+            this.$emit('update:inputCategories', JSON.parse(JSON.stringify(this.Categories)))
+            this.DialogVisible = false
+          }
+        })
+      }
+    },
+    async SetCategory (NewCategories) {
+      let OutArray = NewCategories.map(category => {
+        return {
+          _id: category._id,
+          title: category.title,
+          link: category.link
+        }
+      })
+      CategoryServices.SetCategory(OutArray).then((result) => {
+        console.log(result)
+        return result.data
+      })
     }
   }
 }
